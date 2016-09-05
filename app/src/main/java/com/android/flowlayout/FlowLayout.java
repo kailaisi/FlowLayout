@@ -1,7 +1,10 @@
 package com.android.flowlayout;
 
 import android.content.Context;
+import android.database.Cursor;
+import android.provider.UserDictionary;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -63,25 +66,21 @@ public class FlowLayout extends ViewGroup {
             View child = getChildAt(i);
             child.measure(childWidthMeasureSpec, childHeightMeasureSpec);
             int measuredWidth = child.getMeasuredWidth();//获得子控件的宽度
-            usedWidth += measuredWidth;//当前行放入一个子控件
-            if (usedWidth <= width) {
-                //不需要换行
-                currentLine.addChild(child);//将这个子控件放入该行
-                usedWidth += horizontalSpacing;
-                if (usedWidth > width) {
-                    //换行
-                    newLine();
-                }
-            } else {
-                //需要换行
-                if (currentLine.getChildCount() < 1) {//当期行还没有任何的子类
-                    currentLine.addChild(child);
-                }
+            if(usedWidth+measuredWidth+horizontalSpacing<width ||currentLine.getChildCount()==0){
+                //当前行没有数据或者现在的宽度+下一个宽度<行宽。不需要换行，直接添加到current中。
+                currentLine.addChild(child);
+                usedWidth+=measuredWidth;
+                usedWidth+=horizontalSpacing;
+            }else{
                 newLine();
+                currentLine.addChild(child);
+                usedWidth+=measuredWidth;
+                usedWidth+=horizontalSpacing;
             }
         }
         if (!mLines.contains(currentLine)) {//添加最后一行
             mLines.add(currentLine);
+            Log.d("FlowLayout", "currentLine.getChildCount():" + currentLine.getChildCount());
         }
         int totalHeight = 0;
         for (Line line : mLines) {
@@ -160,7 +159,6 @@ public class FlowLayout extends ViewGroup {
                     //如果此时textview的文字已经绘制完成，因为我们重新layout，会导致文字不居中，重新获取文字，并设置，
                     view.setText(text);
                 }
-                view.invalidate();
                 //更新下一个子View的左侧的位置
                 l += view.getMeasuredWidth()+surplusChild;
                 l += verticalSpacing;

@@ -5,6 +5,7 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.ScrollView;
@@ -43,6 +44,8 @@ public class MainActivity extends AppCompatActivity {
             //设置背景为状态选择器
             textView.setBackgroundDrawable(new DrawableUtils().creatStateListDrawable(pressDrawable, drawable));
             textView.setText(datas.get(i));
+            textView.setGravity(Gravity.CENTER);
+            Log.d("MainActivity", datas.get(i));
             final int finalI = i;
             textView.setOnClickListener(new View.OnClickListener() {
                 @Override
