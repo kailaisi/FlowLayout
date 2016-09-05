@@ -1,8 +1,6 @@
 package com.android.flowlayout;
 
 import android.content.Context;
-import android.database.Cursor;
-import android.provider.UserDictionary;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.Gravity;
